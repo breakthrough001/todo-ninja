@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
-    <h1>Dashboard</h1>
-    <v-btn class="hidden-md-and-down">Click Me</v-btn>
+    <h1 class="subheading grey--text">Dashboard</h1>
+     <v-container class="my-5"> content </v-container>
   </div>
 </template>
 
