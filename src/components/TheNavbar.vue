@@ -10,6 +10,28 @@
         <span>Ninja</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+
+      <!-- dropdown menu -->
+      <v-menu offset-y open-on-hover>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="normal" text v-bind="attrs" v-on="on"
+            ><span>Menu</span>
+            <v-icon right>mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(link, index) in links"
+            :key="index"
+            router
+            :to="link.route"
+          >
+            <v-icon left>{{ link.icon }}</v-icon>
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-btn text color="grey">
         <span>Sign Out</span>
         <span class="mdi mdi-exit-to-app"></span>
@@ -25,7 +47,10 @@
           <p class="white--text subheading mt-1">Yoshi</p>
         </v-col></v-row
       >
-      <v-divider class="mx-4 grey"></v-divider>
+      <v-row
+        ><v-col align="center" class="mb-6"> <ThePopup /> </v-col
+      ></v-row>
+
       <v-list-item
         v-for="link in links"
         :key="link.text"
@@ -46,7 +71,9 @@
 </template>
 
 <script>
+import ThePopup from "./ThePopup.vue";
 export default {
+  components: { ThePopup },
   data() {
     return {
       drawer: false,

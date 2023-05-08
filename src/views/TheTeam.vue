@@ -12,7 +12,7 @@
           v-for="person in team"
           :key="person.name"
         >
-          <v-card class="text-center">
+          <v-card class="text-center rounded-lg">
             <v-responsive class="pt-4"
               ><v-avatar size="100"> <img :src="person.avatar" /> </v-avatar
             ></v-responsive>

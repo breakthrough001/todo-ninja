@@ -27,7 +27,6 @@
                 v-on="on"
                 v-bind="attrs"
                 small
-                flat
                 text
                 color="#757575"
                 @click="sortBy('person')"
@@ -43,7 +42,6 @@
                 v-on="on"
                 v-bind="attrs"
                 small
-                flat
                 text
                 color="#757575"
                 @click="sortBy('status')"
