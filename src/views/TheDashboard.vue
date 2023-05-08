@@ -2,12 +2,67 @@
   <div class="dashboard">
     <h1 class="subheading grey--text">Dashboard</h1>
     <v-container class="my-5">
+      <v-row class="mb-3">
+        <v-col>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                small
+                text
+                case="none"
+                color="#757575"
+                @click="sortBy('title')"
+              >
+                <v-icon left small>mdi-folder</v-icon>
+                <span class="caption">By project name</span>
+              </v-btn></template
+            >
+            <span>Sort project by project name</span></v-tooltip
+          >
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                small
+                flat
+                text
+                color="#757575"
+                @click="sortBy('person')"
+              >
+                <v-icon left small>mdi-account</v-icon>
+                <span class="caption">By project name</span>
+              </v-btn></template
+            ><span>Sort project by person</span></v-tooltip
+          >
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                small
+                flat
+                text
+                color="#757575"
+                @click="sortBy('status')"
+              >
+                <v-icon left small>mdi-list-status</v-icon>
+                <span class="caption">By status</span>
+              </v-btn>
+            </template>
+            <span>Sort project by status</span></v-tooltip
+          >
+        </v-col>
+      </v-row>
+
       <v-card
         v-for="project in projects"
         :key="project.title"
         :class="`pa-3 project ${project.status.toLowerCase()}`"
       >
-        <v-row row wrap>
+        <v-row>
           <v-col cols="12" xs="6" md="6">
             <div class="caption grey--text">Project Title</div>
             <div>{{ project.title }}</div>
@@ -21,7 +76,7 @@
             <div>{{ project.due }}</div>
           </v-col>
           <v-col cols="12" xs="2" sm="4" md="2">
-            <div>
+            <div class="text-right">
               <v-chip
                 id="chip-container"
                 small
@@ -81,10 +136,19 @@ export default {
       ],
     };
   },
+  methods: {
+    sortBy(prop) {
+      this.projects.sort((a, b) => (a[prop] < b[prop] ? -1 : 1));
+    },
+  },
 };
 </script>
 
 <style>
+.v-btn__content {
+  text-transform: capitalize;
+}
+
 .project.complete {
   border-left: 4px solid #3cd1c2;
 }
