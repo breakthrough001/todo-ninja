@@ -1,5 +1,10 @@
 <template>
-  <v-dialog transition="dialog-top-transition" max-width="600">
+  <v-dialog
+    transition="dialog-top-transition"
+    max-width="600"
+    v-model="dialog"
+    @click:outside="resetForm"
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-btn color="info" depressed v-bind="attrs" v-on="on"
         >Add new project</v-btn
@@ -43,7 +48,12 @@
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-start">
-          <v-btn depressed color="primary" class="mb-2" @click="submit"
+          <v-btn
+            depressed
+            color="primary"
+            class="mb-2"
+            @click="submit"
+            :loading="loading"
             >Add project</v-btn
           >
           <v-btn
@@ -72,11 +82,17 @@ export default {
       date: "",
       inputRules: [(v) => v.length >= 3 || "Minimum length is 3 characters"],
       inputDate: [(v) => v.length >= 3 || "Select date"],
+      loading: false,
+      dialog: false,
     };
   },
   methods: {
+     resetForm() {
+      this.$refs.form.reset()
+    },
     submit() {
       if (this.$refs.form.validate()) {
+        this.loading = true;
         addDoc(collection(db, "projects"), {
           title: this.title,
           content: this.content,
@@ -86,6 +102,10 @@ export default {
           person: "Donkey Kong",
           status: "Ongoing",
         });
+        this.$refs.form.reset();
+        this.loading = false;
+        this.dialog = false;
+        this.$emit("projectAdded");
       }
     },
   },

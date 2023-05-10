@@ -20,61 +20,34 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import db from "@/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
+let projects = ref([]);
+
 export default {
   components: {},
+  setup() {
+    onSnapshot(collection(db, "projects"), (querySnapshot) => {
+      const firebaseProjects = [];
+
+      querySnapshot.forEach((doc) => {
+        const project = {
+          id: doc.id,
+          title: doc.data().title,
+          content: doc.data().content,
+          person: doc.data().person,
+          due: doc.data().due,
+          status: doc.data().status,
+        };
+        firebaseProjects.push(project);
+      });
+      projects.value = firebaseProjects;
+    });
+  },
   data() {
     return {
-      projects: [
-        {
-          title: "Design new website",
-          person: "Yoshi",
-          due: "Jan 5th, 2025",
-          status: "Overdue",
-          content: "Creating wireframes and mockups",
-        },
-        {
-          title: "Develop new feature",
-          person: "Mario",
-          due: "Mar 15th, 2025",
-          status: "Complete",
-          content: "Researching technology options",
-        },
-        {
-          title: "Write marketing copy",
-          person: "Luigi",
-          due: "Feb 28th, 2025",
-          status: "Ongoing",
-          content: "Drafting product descriptions and taglines",
-        },
-        {
-          title: "Plan social media campaign",
-          person: "Donkey Kong",
-          due: "Apr 20th, 2025",
-          status: "Ongoing",
-          content: "Developing content calendar and ad targeting",
-        },
-        {
-          title: "Create product roadmap",
-          person: "Peach",
-          due: "May 10th, 2025",
-          status: "Complete",
-          content: "Gathering input from stakeholders and market research",
-        },
-        {
-          title: "User Testing",
-          person: "Yoshi",
-          due: "Jan 12th, 2025",
-          status: "Overdue",
-          content: "Interview current partners for feedback",
-        },
-        {
-          title: "Design new portal features",
-          person: "Yoshi",
-          due: "Jan 20th, 2025",
-          status: "Ongoing",
-          content: "Work with PM to mockup new features for portal",
-        },
-      ],
+      projects: projects,
     };
   },
   computed: {

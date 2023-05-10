@@ -17,10 +17,10 @@
               >
                 <v-icon left small>mdi-folder</v-icon>
                 <span class="caption">By project name</span>
-              </v-btn></template
-            >
-            <span>Sort project by project name</span></v-tooltip
-          >
+              </v-btn>
+            </template>
+            <span>Sort project by project name</span>
+          </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -32,10 +32,11 @@
                 @click="sortBy('person')"
               >
                 <v-icon left small>mdi-account</v-icon>
-                <span class="caption">By project name</span>
-              </v-btn></template
-            ><span>Sort project by person</span></v-tooltip
-          >
+                <span class="caption">By person</span>
+              </v-btn>
+            </template>
+            <span>Sort project by person</span>
+          </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -50,8 +51,8 @@
                 <span class="caption">By status</span>
               </v-btn>
             </template>
-            <span>Sort project by status</span></v-tooltip
-          >
+            <span>Sort project by status</span>
+          </v-tooltip>
         </v-col>
       </v-row>
 
@@ -91,47 +92,36 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import db from "@/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
+
+let projects = ref([]);
+
 export default {
   components: {},
+  setup() {
+    onSnapshot(collection(db, "projects"), (querySnapshot) => {
+      const firebaseProjects = [];
+
+      querySnapshot.forEach((doc) => {
+        const project = {
+          id: doc.id,
+          title: doc.data().title,
+          content: doc.data().content,
+          person: doc.data().person,
+          due: doc.data().due,
+          status: doc.data().status,
+        };
+        firebaseProjects.push(project);
+      });
+      projects.value = firebaseProjects;
+    });
+  },
   data() {
     return {
-      projects: [
-        {
-          title: "Design new website",
-          person: "David Choe",
-          due: "Jan 5th, 2025",
-          status: "Overdue",
-          content: "Creating wireframes and mockups",
-        },
-        {
-          title: "Develop new feature",
-          person: "Karen Smith",
-          due: "Mar 15th, 2025",
-          status: "Complete",
-          content: "Researching technology options",
-        },
-        {
-          title: "Write marketing copy",
-          person: "John Doe",
-          due: "Feb 28th, 2025",
-          status: "Ongoing",
-          content: "Drafting product descriptions and taglines",
-        },
-        {
-          title: "Plan social media campaign",
-          person: "Jane Smith",
-          due: "Apr 20th, 2025",
-          status: "Ongoing",
-          content: "Developing content calendar and ad targeting",
-        },
-        {
-          title: "Create product roadmap",
-          person: "Sarah Lee",
-          due: "May 10th, 2025",
-          status: "Complete",
-          content: "Gathering input from stakeholders and market research",
-        },
-      ],
+      projects: projects,
+      documents: [],
     };
   },
   methods: {
@@ -168,3 +158,15 @@ export default {
   background: tomato;
 }
 </style>
+
+<!-- dummy data -->
+<!-- { title: "Design new website", person: "David Choe", due: "Jan 5th, 2025",
+status: "Overdue", content: "Creating wireframes and mockups", }, { title:
+"Develop new feature", person: "Karen Smith", due: "Mar 15th, 2025", status:
+"Complete", content: "Researching technology options", }, { title: "Write
+marketing copy", person: "John Doe", due: "Feb 28th, 2025", status: "Ongoing",
+content: "Drafting product descriptions and taglines", }, { title: "Plan social
+media campaign", person: "Jane Smith", due: "Apr 20th, 2025", status: "Ongoing",
+content: "Developing content calendar and ad targeting", }, { title: "Create
+product roadmap", person: "Sarah Lee", due: "May 10th, 2025", status:
+"Complete", content: "Gathering input from stakeholders and market research", }, -->
